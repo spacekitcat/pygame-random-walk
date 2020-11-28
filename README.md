@@ -2,7 +2,7 @@
 
 This is a kata.
 
-A quick random walk simulation written in Python with PyGame.
+A quick stochastic walk simulation written in Python with PyGame.
 
 The simulation starts at an origin point and it draws a new line going in a random direction,
 The end of the new line becomes the new origin point and it draws another new line going in another random direction.
