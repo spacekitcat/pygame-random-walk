@@ -9,46 +9,31 @@ WINSIZE = [800, 500]
 def is_exit_key(e):
   return e.type == pg.KEYUP and (e.key == pg.K_ESCAPE or e.key == pg.K_q)
 
-class Direction(Enum):
-  North = 0,
-  East = 1,
-  South = 2,
-  West = 3
-
-def draw_line(origin, direction, length, color):
-  destination = None
-  if direction == Direction.North:
-    destination = (origin[0], origin[1] + length)
-  elif direction == Direction.East:
-    destination = (origin[0] + length, origin[1])
-  elif direction == Direction.South:
-    destination = (origin[0], origin[1] - length)
-  elif direction == Direction.West:
-    destination = (origin[0] - length, origin[1])
-
-  pg.draw.line(pg.display.get_surface(), color, origin, destination, 1)
-
-  return destination
-
-def choose_random_direction(origin, previous):
-  choices = []
-
-  if origin[0] > 0 and not previous == Direction.West:
-    choices.append(Direction.West)
-  
-  if origin[0] < WINSIZE[0] and not previous == Direction.East:
-    choices.append(Direction.East)
-  
-  if origin[1] < WINSIZE[1] and not previous == Direction.North:
-    choices.append(Direction.North)
-  
-  if origin[1] > 0 and not previous == Direction.South:
-    choices.append(Direction.South)
-
-  return random.choice(choices)
-
 def choose_random_color():
   return list(np.random.choice(range(256), size=3))
+
+def generate_random_direction(origin):
+  x_choices = [0]
+  y_choices = [0]
+  
+  if origin[0] > 0:
+    x_choices.append(-1)
+  
+  if (origin[0] < WINSIZE[0]):
+    x_choices.append(1)
+    
+  if origin[1] > 0:
+    y_choices.append(-1)
+
+  if (origin[1] < WINSIZE[1]):
+    y_choices.append(1)
+    
+  return [np.random.choice(x_choices), np.random.choice(y_choices)]
+
+def draw_direction(origin, direction, length, color):
+  destination = np.add(origin, np.multiply(direction, length))
+  pg.draw.line(pg.display.get_surface(), color, origin, tuple(destination), 1)
+  return destination
 
 def main():
   random.seed()
@@ -61,11 +46,10 @@ def main():
   screen.fill(black)
 
   done = 0
-  origin = (WINSIZE[0] / 2, WINSIZE[1] / 2)
-  direction = choose_random_direction(origin, None)
+  origin = [WINSIZE[0] / 2, WINSIZE[1] / 2]
   while not done:
-    origin = draw_line(origin, direction, 5,  choose_random_color())
-    direction = choose_random_direction(origin, direction)
+    direction = generate_random_direction(origin)
+    origin = draw_direction(origin, direction, 5,  choose_random_color())
     pg.display.update()
     for e in pg.event.get():
       if e.type == pg.QUIT or is_exit_key(e):

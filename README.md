@@ -14,7 +14,7 @@ This process repeats until the program is closed.
 4. It can never go in a direction that would take it off screen.
 5. Each line is drawn with a random colour.
 
-![Screenshot showing this program running, it shows a multi coloured cluster of orthogonal lines](images/demo.png)
+![Screenshot showing this program running, it shows a multi-coloured cluster of lines](images/demo.png)
 
 ## Run
 
